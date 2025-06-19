@@ -22,8 +22,8 @@ final GoRouter router = GoRouter(
        GoRoute(
       path: '/home',
       builder: (BuildContext context, GoRouterState state) {
-                        final String usuario = state.extra as String; 
-        return HomeScreen(usuario: usuario,);
+                        final  usuario = state.extra ; 
+        return HomeScreen(usuario: usuario);
 
 
       },
