@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/config.dart';
 void main() {
-  runApp(const MaterialApp(home: MyApp()));
+  runApp(ProviderScope(child:MyApp()));
 }
 class MyApp extends StatelessWidget {
   /// Constructs a [MyApp]
