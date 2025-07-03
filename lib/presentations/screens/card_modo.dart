@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/entities/lego.dart';
 import 'package:myapp/presentations/providers.dart';
-
+//
 class CardModo extends ConsumerStatefulWidget {
   const CardModo({super.key});
 
