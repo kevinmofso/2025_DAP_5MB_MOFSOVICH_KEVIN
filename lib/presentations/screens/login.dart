@@ -1,34 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/entities/usuario.dart';
+import 'package:myapp/presentations/providers.dart';
 
-class Login extends StatefulWidget {
+final ocultarContraseniaProvider = StateProvider<bool>((ref) => true);
+
+class Login extends ConsumerWidget {
   const Login({super.key});
-
-  @override
-  State<Login> createState() => _Login();
-}
-
-class _Login extends State<Login> {
   // ignore: prefer_final_fields
-  bool _ocultarContrasenia = true;
-
-  List<Usuario> usuarios = [
-    Usuario(name: "iphone", password: '1', mail: 'iphone@gmail.com'),
-    Usuario(name: "samsung", password: '1', mail: 'samsung@gmail.com'),
-  ];
-
-  TextEditingController inputmail = TextEditingController();
-  TextEditingController inputusuario = TextEditingController();
-  TextEditingController inputcontrasenia = TextEditingController();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final ocultarContrasenia = ref.watch(ocultarContraseniaProvider);
+    final usuarios = ref.watch(listausuariosprovider);
+    TextEditingController inputmail = TextEditingController();
+    TextEditingController inputusuario = TextEditingController();
+    TextEditingController inputcontrasenia = TextEditingController();
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               controller: inputusuario,
               decoration: const InputDecoration(
@@ -38,10 +31,10 @@ class _Login extends State<Login> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               controller: inputcontrasenia,
-              obscureText: _ocultarContrasenia,
+              obscureText: ocultarContrasenia,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Escribe tu contraseña',
@@ -49,7 +42,7 @@ class _Login extends State<Login> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               controller: inputmail,
               decoration: const InputDecoration(
@@ -62,11 +55,11 @@ class _Login extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Checkbox(
-                value: _ocultarContrasenia,
+                value: ocultarContrasenia,
                 onChanged: (value) {
-                  setState(() {
-                    _ocultarContrasenia = value!;
-                  });
+                  value = ref
+                      .read(ocultarContraseniaProvider.notifier)
+                      .update((state) => !state);
                 },
               ),
               const Text("Ocultar contraseña"),
@@ -80,10 +73,26 @@ class _Login extends State<Login> {
                     inputcontrasenia.text == '' ||
                     inputmail.text == '') {
                   mensaje = 'todos los campos deben estar completados';
-                } else if (estabientodo(inputmail.text, inputusuario.text, inputcontrasenia.text, usuarios)) {
-                  var usuarioencontrado = usuarios.firstWhere((u) => u.mail == inputmail.text);
+                } else if (estabientodo(
+                      inputmail.text,
+                      inputusuario.text,
+                      inputcontrasenia.text,
+                      usuarios,
+                    ) !=
+                    null) {
+                  ref
+                      .read(nameprovider.notifier)
+                      .update(
+                        (state) =>
+                            estabientodo(
+                              inputmail.text,
+                              inputusuario.text,
+                              inputcontrasenia.text,
+                              usuarios,
+                            )!,
+                      );
                   mensaje = 'Login exitoso';
-                  context.go('/home', extra: usuarioencontrado );
+                  context.go('/movie_Screen');
                   return;
                 } else {
                   mensaje = 'Usuario o contraseña incorrectos';

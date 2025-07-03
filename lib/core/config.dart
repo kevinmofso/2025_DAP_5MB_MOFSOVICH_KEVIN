@@ -1,15 +1,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/entities/usuario.dart';
+import 'package:myapp/presentations/screens/card_modo.dart';
 import 'package:myapp/presentations/screens/home.dart';
 import 'package:myapp/presentations/screens/login.dart';
+import 'package:myapp/presentations/screens/lego_screen.dart';
+import 'package:myapp/presentations/screens/counter_state.dart';
 final GoRouter router = GoRouter(
+  initialLocation: '/login',
   routes: <RouteBase>[
     GoRoute(
 
-      path: '/', 
+      path: '/movie_Screen',
       builder: (BuildContext context, GoRouterState state) {
-        return Login(); // Puedes poner tu HomeScreen aquí
+        return const MovieScreen(); // Puedes poner tu HomeScreen aquí
+      },
+    ),
+        GoRoute(
+
+      path: '/counter_state',
+      builder: (BuildContext context, GoRouterState state) {
+        return const CounterScreen(); // Puedes poner tu HomeScreen aquí
       },
     ),
         GoRoute(
@@ -21,13 +33,22 @@ final GoRouter router = GoRouter(
     ), 
        GoRoute(
       path: '/home',
-      builder: (BuildContext context, GoRouterState state) {
-                        final  usuario = state.extra ; 
-        return HomeScreen(usuario: usuario);
+      builder: (context, state) {
+                    
+        return HomeScreen(usuario: state.extra as Usuario);
+        
 
 
       },
+      
     ),
+            GoRoute(
+      path: '/card',
+      builder: (BuildContext context, GoRouterState state) {
+        return const CardModo();
+      },
+     
+    ), 
 
   ],
 );

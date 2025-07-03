@@ -12,19 +12,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String get nombreUsuario => widget.usuario.name;
-String? get direccionUsuario => widget.usuario.direccion;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
 Column(
+  
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-      
-         Text("Hola $nombreUsuario"),
-         Text("vivis en  $direccionUsuario")
+
      ] ),
     );
   }
