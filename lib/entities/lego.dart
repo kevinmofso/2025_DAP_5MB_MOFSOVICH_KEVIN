@@ -3,7 +3,7 @@ class Lego {
   String name;
   String description;
   String posterurl;
-  int weight;
+  String weight;
   Lego({
     required this.id,
     required this.name,

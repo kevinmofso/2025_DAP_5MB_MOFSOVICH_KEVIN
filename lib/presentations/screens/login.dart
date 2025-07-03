@@ -5,17 +5,23 @@ import 'package:myapp/entities/usuario.dart';
 import 'package:myapp/presentations/providers.dart';
 
 final ocultarContraseniaProvider = StateProvider<bool>((ref) => true);
-
-class Login extends ConsumerWidget {
+class Login extends ConsumerStatefulWidget {
   const Login({super.key});
-  // ignore: prefer_final_fields
   @override
-  Widget build(BuildContext context, ref) {
-    final ocultarContrasenia = ref.watch(ocultarContraseniaProvider);
+  ConsumerState<Login> createState() => _LoginState();
+
+}
+
+class _LoginState extends ConsumerState<Login> {
+  TextEditingController inputmail = TextEditingController();
+  TextEditingController inputusuario = TextEditingController();
+  TextEditingController inputcontrasenia = TextEditingController();
+    bool ocultarContrasenia = false;
+  
+  @override
+  Widget build(BuildContext context) {
     final usuarios = ref.watch(listausuariosprovider);
-    TextEditingController inputmail = TextEditingController();
-    TextEditingController inputusuario = TextEditingController();
-    TextEditingController inputcontrasenia = TextEditingController();
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -54,14 +60,26 @@ class Login extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Checkbox(
-                value: ocultarContrasenia,
-                onChanged: (value) {
-                  value = ref
-                      .read(ocultarContraseniaProvider.notifier)
-                      .update((state) => !state);
-                },
-              ),
+              if( ocultarContrasenia == false)
+             IconButton(
+                    iconSize: 50.0,
+                    icon: Icon(Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        ocultarContrasenia = !ocultarContrasenia;
+                      });
+                    },
+                  ),
+                  if (ocultarContrasenia == true)
+                  IconButton(
+                    iconSize: 50.0,
+                    icon: Icon(Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        ocultarContrasenia = !ocultarContrasenia;
+                      });
+                    },
+                  ),
               const Text("Ocultar contraseña"),
             ],
           ),
@@ -109,4 +127,6 @@ class Login extends ConsumerWidget {
       ),
     );
   }
-}
+  }
+
+
