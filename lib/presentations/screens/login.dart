@@ -1,29 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-class Login extends StatefulWidget {
-  const Login({super.key});
+import 'package:myapp/entities/usuario.dart';
+import 'package:myapp/presentations/providers.dart';
 
+final ocultarContraseniaProvider = StateProvider<bool>((ref) => true);
+class Login extends ConsumerStatefulWidget {
+  const Login({super.key});
   @override
-  State<Login> createState() => _Login();
+  ConsumerState<Login> createState() => _LoginState();
+
 }
 
-class _Login extends State<Login> {
-   // ignore: prefer_final_fields
-   bool _ocultarContrasenia = true;
-
-  String contrasenia = '2';
-  String usuario = '1';
-
+class _LoginState extends ConsumerState<Login> {
+  TextEditingController inputmail = TextEditingController();
   TextEditingController inputusuario = TextEditingController();
   TextEditingController inputcontrasenia = TextEditingController();
-   @override
+    bool ocultarContrasenia = false;
+  
+  @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    final usuarios = ref.watch(listausuariosprovider);
+
+    return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.all(40.0),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               controller: inputusuario,
               decoration: const InputDecoration(
@@ -33,27 +37,49 @@ class _Login extends State<Login> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               controller: inputcontrasenia,
-              obscureText: _ocultarContrasenia,
+              obscureText: ocultarContrasenia,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Escribe tu contraseña',
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
+              controller: inputmail,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Escribe tu mail',
+              ),
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Checkbox(
-                value: _ocultarContrasenia,
-                onChanged: (value) {
-                  setState(() {
-                    _ocultarContrasenia = value!;
-                  });
-                },
-              ),
+              if( ocultarContrasenia == false)
+             IconButton(
+                    iconSize: 50.0,
+                    icon: Icon(Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        ocultarContrasenia = !ocultarContrasenia;
+                      });
+                    },
+                  ),
+                  if (ocultarContrasenia == true)
+                  IconButton(
+                    iconSize: 50.0,
+                    icon: Icon(Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        ocultarContrasenia = !ocultarContrasenia;
+                      });
+                    },
+                  ),
               const Text("Ocultar contraseña"),
             ],
           ),
@@ -62,14 +88,32 @@ class _Login extends State<Login> {
               onPressed: () {
                 String mensaje;
                 if (inputusuario.text == '' ||
-                    inputcontrasenia.text == '' ) {
+                    inputcontrasenia.text == '' ||
+                    inputmail.text == '') {
                   mensaje = 'todos los campos deben estar completados';
-                } else if (inputusuario.text == usuario &&
-                    inputcontrasenia.text == contrasenia) {
-                  mensaje = 'login exitoso';
-                      context.go('/home',extra: usuario);
+                } else if (estabientodo(
+                      inputmail.text,
+                      inputusuario.text,
+                      inputcontrasenia.text,
+                      usuarios,
+                    ) !=
+                    null) {
+                  ref
+                      .read(nameprovider.notifier)
+                      .update(
+                        (state) =>
+                            estabientodo(
+                              inputmail.text,
+                              inputusuario.text,
+                              inputcontrasenia.text,
+                              usuarios,
+                            )!,
+                      );
+                  mensaje = 'Login exitoso';
+                  context.go('/movie_Screen');
+                  return;
                 } else {
-                  mensaje = 'usuario o contraseña incorrectos';
+                  mensaje = 'Usuario o contraseña incorrectos';
                 }
 
                 ScaffoldMessenger.of(
@@ -83,5 +127,6 @@ class _Login extends State<Login> {
       ),
     );
   }
-}
+  }
+
 
