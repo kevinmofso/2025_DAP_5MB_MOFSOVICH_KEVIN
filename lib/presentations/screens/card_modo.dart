@@ -228,7 +228,7 @@ crearcamposdetexto(
     padding: const EdgeInsets.all(10),
     child: TextField(
       controller: input,
-      enabled: editar,
+      enabled: editar ,
       keyboardType: tipo,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
